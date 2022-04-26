@@ -8,19 +8,47 @@ async function httpGetPlanets() {  // our planets fc is already async, this fn i
 // origin: combination of PROTOCOL(http://) HOST(www.google.com) PORT(:443), Browsers by default block cross origin req so you dont leak data
 // we can allow them by sending (access-control-allow-origin header) to do a whitelist of secure access 
 
+// Load launches, sort by flight number, and return as JSON.
 async function httpGetLaunches() {
-  // TODO: Once API is ready.
-  // Load launches, sort by flight number, and return as JSON.
+  const response = await fetch(`${API_URL}/launches`); // client and server are in different PORTS(3000F , 8000B), fetch return a promise so we await it
+  const fetchedLaunches = await response.json();
+  return fetchedLaunches.sort((a,b) => {
+    return a.flightNumber - b.flightNumber; // to sort the launches in ascending order, if b is higher than a returns a false number. See sort method
+  });
 }
 
+// Submit given launch data to launch system.
 async function httpSubmitLaunch(launch) {
-  // TODO: Once API is ready.
-  // Submit given launch data to launch system.
-}
+  try{
+    return await fetch(`${API_URL}/launches`, {
+      method: "post", // specify the method because the default for fetch is 'get'
+      headers: {
+        "Content-Type": "application/json", 
+      },
+      body: JSON.stringify(launch), // in the body the object has to be passed as a string
+    });
+  } catch(err) {
+    return {
+      ok: false,
+    };
+  }
+};
 
+// Delete launch with given ID.
 async function httpAbortLaunch(id) {
-  // TODO: Once API is ready.
-  // Delete launch with given ID.
+
+  try {
+    return await fetch(`${API_URL}/launches/${id}`, {
+      method: 'delete',
+    });
+  } catch(err) {
+    console.log(err);
+    return {
+      ok: false,
+    };
+  }
+  
+  
 }
 
 export {
