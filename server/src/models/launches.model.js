@@ -1,3 +1,5 @@
+// const launches = require('./launches.mongo');
+
 const launches = new Map(); // creates a Map object that iterates its elements in insertion order — a for...of loop returns an array of [key, value] for each iteration.
 
 let lastFlightNumber = 100;

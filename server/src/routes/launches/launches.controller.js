@@ -8,7 +8,7 @@ function httpAddNewLaunch(req,res) {
     const launch = req.body;
     if (!launch.mission || !launch.rocket || !launch.launchDate || !launch.target) { // to check any value is empty
         return res.status(400).json({
-            error: 'Missing required lauch property',
+            error: 'Missing required launch property',
         });
     };
 
