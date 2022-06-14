@@ -19,7 +19,6 @@ const launchesSchema = new mongoose.Schema({  // to create a schema of data for 
     },
     target: {
         type: String, // instead of adding omplexity with mongo dif approach, nosql approach: include relevant dataa from our planet directly in target property, all data lives in this collection
-        required: true,
         // type: mongoose.ObjectId, // this Id would allow us to look up planets in planets collection, in SQL with joints but here is more complex, code that logic ourselves
         // ref: 'Planet', // Mongo Collection, mongoose will check and verify that any planet reference in our launch is one of the planets in planet colection in mongo
     },

@@ -1,10 +1,13 @@
-const { getAllLaunches, addNewLaunch, existsLaunchWithId, abortLaunchById } = require('../../models/launches.model');
+const { getAllLaunches, scheduleNewLaunch, existsLaunchWithId, abortLaunchById } = require('../../models/launches.model');
+const { getPagination } = require('../../services/query');
 
-function httpGetAllLaunches(req,res) {
-    return res.status(200).json(getAllLaunches()); // Values method of launches map object return iterable values of it, Array.from takes that iterable obj and turns them into an array to make it work  to the format in which the API works (JSON)
+async function httpGetAllLaunches(req,res) {
+    const { skip, limit } = getPagination(req.query);
+    const launches = await getAllLaunches(skip, limit); // pass the skip and limits parameter
+    return res.status(200).json(launches); // Values method of launches map object return iterable values of it, Array.from takes that iterable obj and turns them into an array to make it work  to the format in which the API works (JSON)
 }                                                              // to return it to the Front end
 
-function httpAddNewLaunch(req,res) {
+async function httpAddNewLaunch(req,res) {
     const launch = req.body;
     if (!launch.mission || !launch.rocket || !launch.launchDate || !launch.target) { // to check any value is empty
         return res.status(400).json({
@@ -19,22 +22,32 @@ function httpAddNewLaunch(req,res) {
         });
     };
 
-    addNewLaunch(launch);
+    await scheduleNewLaunch(launch);
     return res.status(201).json(launch); // return to only send one response
 }
 
 
-function httpAbortLaunch(req,res) {
+async function httpAbortLaunch(req,res) {
     const launchId = Number(req.params.id); // params to call the parameter of id from the route in launches.route, (+) to make it a number because it comes from the router as a string
 
-    if (!existsLaunchWithId(launchId)) {
+    const existsLaunch =await existsLaunchWithId(launchId);
+
+    if (!existsLaunch) {
         return res.status(404).json({   // if launch does not exist
             error: 'Launch not found',
         });
     }
     
-    const aborted = abortLaunchById(launchId);
-    return res.status(200).json(aborted);  // if launch exists
+    const aborted = await abortLaunchById(launchId);
+
+    if (!aborted) {
+        return res.status(400).json({  
+            error: 'Launch not aborted',
+        })
+    }
+    return res.status(200).json({
+        ok: true,
+    });  // if launch exists
     
 }
 

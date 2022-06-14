@@ -3,8 +3,7 @@ const path = require('path');
 const cors = require('cors');
 const morgan = require('morgan');
 
-const planetsRouter = require('./routes/planets/planets.route');
-const launchesRouter = require('./routes/launches/launches.route');
+const api = require('./routes/api');
 
 const app = express();
 
@@ -18,8 +17,8 @@ app.use(morgan('combined')); // To log requests in the combined mode morgan offe
 app.use(express.json()); // JSON parsing middleware, we start to build a chain of middlewares that handle req as they come
 app.use(express.static(path.join(__dirname , '..' , 'public')));
 
-app.use('/planets', planetsRouter);  // comes in to express, gets checked for JSON content-type and then goes through our express router
-app.use('/launches', launchesRouter);
+app.use('/v1', api); //  for versioning
+// app.use('/v2', v2Router); if there was a second version, support multiple versions at the same time
 
 app.get('/*', (req,res) => {  // when the react router and the API router doesnt match it takes by default to index.html
     res.sendFile(path.join(__dirname , '..' , 'public', 'index.html'));

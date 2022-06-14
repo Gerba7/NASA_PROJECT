@@ -26,14 +26,14 @@ function loadPlanetsData() {
                 // await planets.create({ // upsert = insert+update inserts data only when that data does not exist, with clusters this create would repete a lot of times and duplicate the planets because of the cluster
                 savePlanet(data);
                 //habitablePlanets.push(data); // data coming from parse after piping
-            }      
+            };      
         })
         .on('error', (err) => {
             console.log(err);
             reject(err); // promise rejected
         })
         .on('end', async () => {
-            const countPlanetsFound = (await getAllPlanets).length; // to count number of planets got from mongo
+            const countPlanetsFound = (await getAllPlanets()).length; // to count number of planets got from mongo
             console.log(`${countPlanetsFound} habitable planets found`);
             resolve(); // promise resolved
         });
@@ -42,7 +42,9 @@ function loadPlanetsData() {
 };
 
 async function getAllPlanets() {
-    return await planets.find({});  // {} empty to bring all, to find many documents or restric to return some, arg -> (filter, projection['keplerName -anotherField' -- list of fields from those planets doc to include in results]), (-) to exclude from search
+    return await planets.find({}, {
+        '_id': 0, '__v':0,  // to exclude this props        
+    });  // {} empty to bring all, to find many documents or restric to return some, arg -> (filter, projection['keplerName -anotherField' -- list of fields from those planets doc to include in results]), (-) to exclude from search
     //return habitablePlanets;
 };
 

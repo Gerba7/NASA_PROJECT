@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8000'; // all our http func will be made against our single API so we set this const
+const API_URL = 'http://localhost:8000/v1'; // all our http func will be made against our single API so we set this const
 
 async function httpGetPlanets() {  // our planets fc is already async, this fn is called in usePlanets to get the planets data
   const response = await fetch(`${API_URL}/planets`); // client and server are in different PORTS(3000F , 8000B), fetch return a promise so we await it
