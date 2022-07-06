@@ -1,0 +1,18 @@
+name: NASA PROJECT CI # Workflow
+on:  # when this worflow will run with different triggers
+  push:
+    branches: [ master ] # when changes in master branch
+  pull_request: # when there is a pull request on the master branch to save only changes (merging code)
+    branches: [ master ]
+jobs: # jobs to run when one of the two triggers, by default github actions runs in parallel
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2 # to check the lastest version of our code from master
+      - name: Use Node.js version 16
+        uses: actions/setup-node@v2 #
+        with: node-version: '16'
+      - run: npm isntall # own steps, installs all our node dependencies
+      - run: npm run build --prefix client 
+  #deploy:
+  #  needs: build # if we want it to run after build secuentially
