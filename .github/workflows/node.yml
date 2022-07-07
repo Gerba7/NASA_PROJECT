@@ -15,10 +15,10 @@ jobs: # jobs to run when one of the two triggers, by default github actions runs
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2 # to check the lastest version of our code from master
-      - name: Use Node.js version ${ matrix.node-version }
+      - name: Use Node.js version ${{matrix.node-version}}
         uses: actions/setup-node@v2 #
         with:
-          node-version: ${ matrix.node-version } # variable for different node version especified above
+          node-version: ${{matrix.node-version}} # variable for different node version especified above
       - run: npm isntall # own steps, installs all our node dependencies
       - run: npm run build --prefix client
       - run: npm test # to quit watch mode from create react app when testing in client 
