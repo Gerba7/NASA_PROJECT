@@ -1,6 +1,7 @@
 const request = require('supertest');  // supertest makes requests against API to test
 const app = require('../../app');
 const { mongoConnect, mongoDisconnect } = require('../../services/mongo');
+const { loadPlanetsData } = require('../../models/planets.model');
 
 
 
@@ -9,6 +10,7 @@ describe('Launches API', () => {
 
     beforeAll(async () => { // a callback for before all the tests, will run once to set up all the tsts coming after 
         await mongoConnect(); // to setup an enviroment for our test, to connect to the database when testing
+        await loadPlanetsData() // before we start testing our launches API, so it can be tested then therefore it wont recognize those planets
     });
 
     afterAll(async() => {
